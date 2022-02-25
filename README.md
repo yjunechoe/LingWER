@@ -70,7 +70,11 @@ colnames(stella_matrix)
 #> [55] "three"     "red"       "bags"      "and"       "we"        "will"     
 #> [61] "go"        "meet"      "her"       "wednesday" "at"        "the"      
 #> [67] "train"     "station"
+```
 
+Get the word error rate (and other info) with `get_metrics()`
+
+``` r
 get_metrics(stella_matrix)
 #> $WER
 #> [1] 0.115942
@@ -88,76 +92,24 @@ get_metrics(stella_matrix)
 #> 
 #> $info$insertions
 #> character(0)
+```
 
+Visualize with `draw_WER()`
+
+``` r
 draw_WER(stella_matrix)
 ```
 
-<html>
-<style type="text/css">
-    .highlighted {
-      display: inline-block;
-      position: relative;
-      margin: 2px 1px;
-      padding: 0px 5px;
-      border-radius: 5px;
-    }
-    .sub {
-      color: black;
-      background-color: #eeb91b;
-    }
-    .del {
-      color: white;
-      background-color: #c05656;
-    }
-    .ins {
-      color: white;
-      background-color: #4181c8;
-    }
-    .wrapper {
-      padding: 2rem;
-      font-family: monospace;
-    }
-    .text-container {
-      padding: 2rem;
-      font-size: 16px;
-      background-color: #d3d3d370;
-      line-height: 1.5;
-    }
-    #tooltip {
-      opacity: 0;
-      position: absolute;
-      top: -14px;
-      left: 0;
-      padding: 0.6em 1em;
-      background: #fff;
-      text-align: center;
-      line-height: 1.6em;
-      font-size: 1em;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      z-index: 10;
-      transition: all 0.1s ease-out;
-      pointer-events: none;
-    }
-  </style>
-<div class="wrapper">
-<div id="tooltip"></div>
-<div class="text-container">please <span class="highlighted del">call</span> <span class="highlighted sub" data-info="2-char edit from &quot;stella&quot;">castella</span> <span class="highlighted sub" data-info="2-char edit from &quot;ask&quot;">asked</span> her to bring these things with her from the store six <span class="highlighted sub" data-info="3-char edit from &quot;spoons&quot;">pounds</span> of fresh snow peas five <span class="highlighted sub" data-info="4-char edit from &quot;thick&quot;">six</span> slabs of blue cheese and maybe a <span class="highlighted sub" data-info="2-char edit from &quot;snack&quot;">snake</span> for her brother bob <span class="highlighted sub" data-info="3-char edit from &quot;we&quot;">will</span> also need a small plastic snake and a big toy frog for the <span class="highlighted sub" data-info="4-char edit from &quot;kids&quot;">case</span> she can scoop these things into three red bags and we will go meet her wednesday at the train station</div>
-</div>
-<script>
-    const tooltip = document.querySelector("#tooltip")
-    const subs = document.querySelectorAll(".sub")
-    subs.forEach(sub => sub.addEventListener("mouseover", event => {
-      textbox = event.currentTarget
-      textboxPos = textbox.getBoundingClientRect()
+![](imgs/wer.png)
 
-      tooltip.textContent = textbox.getAttribute("data-info")
-      tooltip.style.left = textboxPos.x + "px"
-      tooltip.style.top = textboxPos.y + textbox.clientHeight + 3 + "px"
-      tooltip.style.opacity = 1
-    }))
-    subs.forEach(sub => sub.addEventListener("mouseout", event => {
-      tooltip.style.opacity = 0
-    }))
-  </script>
-</html>
+Another example:
+
+``` r
+stella_sentence_observed2 <- "On the Police Coast our ask her to bring this thing things with her from the store six spoons of fresh snow peas five slabs of blue cheese and maybe a snack for her brother Bob also need a small plastic snake and a big toy frog for the kids. She can scoop these things in the three bread bags and we will go meet her Wednesday at the train station."
+
+stella_matrix2 <- match_matrix(stella_sentence_observed2, stella_sentence_truth, unit = "none")
+
+draw_WER(stella_matrix2)
+```
+
+![](imgs/wer2.png)
