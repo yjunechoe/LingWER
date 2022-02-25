@@ -26,6 +26,7 @@ grid_search_unique <- function(d) {
           # see if you can fallback to second best match
           if (anchor > 1 && copy[anchor - 1, i] != Inf) {
             copy[-(anchor - 1), i] <- Inf
+            copy[seq_len(anchor - 1), -seq_len(i)] <- Inf
           } else {
             # otherwise no match for this word
             copy[, i] <- Inf
@@ -33,37 +34,37 @@ grid_search_unique <- function(d) {
         } else {
           # If next candidate has better matches, match this truth to current candidate
           copy[-anchor, i] <- Inf
-          copy[anchor, -i] <- Inf
+          copy[seq_len(anchor), -seq_len(i)] <- Inf
         }
       } else {
         prev_row <- anchor - 1
         # If no better match to row/truth, proceed
         if (ncol(copy) == 1 || collapse::fmin(copy[anchor, i]) == this_dist) {
           copy[-anchor, i] <- Inf
-          copy[anchor, -i] <- Inf
+          copy[seq_len(anchor), -seq_len(i)] <- Inf
         } else {
           # Is tl-br possible?
           if (all(dim(copy) >= 2) && prev_row > 0 && collapse::fmax(next_dist, copy[prev_row, i]) != Inf) {
             ## If at the last 2x2 corner of the grid, force tl-br and maximize match
             if (all(c(anchor, next_col) == dim(copy))) {
               copy[-prev_row, i] <- Inf
-              copy[prev_row, -i] <- Inf
+              copy[seq_len(prev_row), -seq_len(i)] <- Inf
             } else {
               tl <- copy[prev_row, i]
               bbr <- copy[anchor + 1, i + 1]
               # Is tl-br optimal?
               if ((tl + next_dist) <= (this_dist + bbr)) {
                 copy[-prev_row, i] <- Inf
-                copy[prev_row, -i] <- Inf
+                copy[seq_len(prev_row), -seq_len(i)] <- Inf
               } else {
                 copy[-anchor, i] <- Inf
-                copy[anchor, -i] <- Inf
+                copy[seq_len(prev_row), -seq_len(i)] <- Inf
               }
             }
           } else {
             # If tl-br is impossible, just take it
             copy[-anchor, i] <- Inf
-            copy[anchor, -i] <- Inf
+            copy[seq_len(anchor), -seq_len(i)] <- Inf
           }
         }
       }

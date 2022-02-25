@@ -70,16 +70,25 @@ Visualize with `draw_WER()`
 draw_WER(stella_matrix)
 ```
 
-![](imgs/wer.png)
+![](imgs/wer1.png)
 
-Another example:
+Another example with letter-edits ("letter") and no edits ("none"):
 
 ```{r, eval = FALSE}
 stella_sentence_observed2 <- "On the Police Coast our ask her to bring this thing things with her from the store six spoons of fresh snow peas five slabs of blue cheese and maybe a snack for her brother Bob also need a small plastic snake and a big toy frog for the kids. She can scoop these things in the three bread bags and we will go meet her Wednesday at the train station."
+```
 
-stella_matrix2 <- match_matrix(stella_sentence_observed2, stella_sentence_truth, unit = "none")
-
-draw_WER(stella_matrix2)
+```{r, eval = FALSE}
+stella_matrix2_letter <- match_matrix(stella_sentence_observed2, stella_sentence_truth, unit = "letter")
+draw_WER(stella_matrix2_letter)
 ```
 
 ![](imgs/wer2.png)
+
+
+```{r, eval = FALSE}
+stella_matrix2_none <- match_matrix(stella_sentence_observed2, stella_sentence_truth, unit = "none")
+draw_WER(stella_matrix2_none)
+```
+
+![](imgs/wer3.png)
