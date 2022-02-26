@@ -21,3 +21,6 @@ Imports:
     stringi,
     syllabifyr
 Remotes: coolbutuseless/phon
+Depends: 
+    R (>= 2.10)
+LazyData: true

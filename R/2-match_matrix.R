@@ -7,7 +7,7 @@
 #' @return Matrix
 #' @export
 #'
-match_matrix <- function(hypothesis, reference, unit = c("none", "letter")) {
+match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none")) {
 
   # Setup ====
 

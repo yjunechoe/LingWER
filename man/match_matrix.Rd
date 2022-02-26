@@ -4,7 +4,7 @@
 \alias{match_matrix}
 \title{Calculate match matrix}
 \usage{
-match_matrix(hypothesis, reference, unit = c("none", "letter"))
+match_matrix(hypothesis, reference, unit = c("letter", "phon", "none"))
 }
 \arguments{
 \item{hypothesis}{Observed string of text}
