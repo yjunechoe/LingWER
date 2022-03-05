@@ -3,11 +3,12 @@
 #' @param hypothesis Observed string of text
 #' @param reference True string of text
 #' @param unit How edit distance should be calculated, if at all
+#' @param out Whether to return the matrix (`"matrix"`) or a dataframe of edits (`"edit"`)
 #'
 #' @return Matrix
 #' @export
 #'
-match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none")) {
+match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none"), out = c("matrix", "edits")) {
 
   # Setup ====
 
@@ -46,36 +47,47 @@ match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none
   edit_bins_2d <- intersect(names(c_missing_sets), names(r_missing_sets))
 
   edit_unit <- match.arg(unit)
+  out <- match.arg(out)
 
-  if (edit_unit != "none") {
+  edits <- lapply(edit_bins_2d, function(bin_chr) {
+    c_set <- c_missing_sets[[bin_chr]]
+    r_set <- r_missing_sets[[bin_chr]]
 
-    walk(edit_bins_2d, function(bin_chr) {
-      c_set <- c_missing_sets[[bin_chr]]
-      r_set <- r_missing_sets[[bin_chr]]
+    col_words <- m_cols[c_set]
+    row_words <- m_rows[r_set]
 
-      col_words <- m_cols[c_set]
-      row_words <- m_rows[r_set]
+    edit_grid <- switch(
+      edit_unit,
+      "none"   = outer(row_words, col_words, function(x, y) rep(Inf, length(x))),
+      "letter" = outer(row_words, col_words, stringdist::stringdist, method = "lv")
+    )
 
-      edit_grid <- switch(
-        edit_unit,
-        "letter" = outer(row_words, col_words, stringdist::stringdist, method = "lv")
-      )
+    rownames(edit_grid) <- row_words
+    colnames(edit_grid) <- col_words
 
-      best_edits_grid <- grid_search_unique(edit_grid)
-      dists <- edit_grid[which(best_edits_grid != Inf)]
+    best_edits_grid <- grid_search_unique(edit_grid)
+    dists <- edit_grid[which(best_edits_grid != Inf)]
 
-      best_edits <- which(best_edits_grid != Inf, arr.ind = TRUE)
-      c_ids <- c_set[best_edits[,"col"]]
-      r_ids <- r_set[best_edits[,"row"]]
+    best_edits <- which(best_edits_grid != Inf, arr.ind = TRUE)
+    c_ids <- c_set[best_edits[,"col"]]
+    r_ids <- r_set[best_edits[,"row"]]
 
-      walk(seq_along(dists), function(i) {
-        m[r_ids[i], c_ids[i]] <<- dists[i]
-      })
-
+    walk(seq_along(dists), function(i) {
+      m[r_ids[i], c_ids[i]] <<- dists[i]
     })
 
-  }
+    data.frame(
+      idx      = c_set[1],
+      truth    = paste(rownames(edit_grid), collapse = " "),
+      observed = paste(colnames(edit_grid), collapse = " ")
+    )
 
-  m
+  })
+
+  switch(
+    out,
+    "matrix" = m,
+    "edits"  = do.call(rbind, edits)
+  )
 
 }

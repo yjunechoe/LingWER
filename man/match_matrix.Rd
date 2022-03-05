@@ -4,7 +4,12 @@
 \alias{match_matrix}
 \title{Calculate match matrix}
 \usage{
-match_matrix(hypothesis, reference, unit = c("letter", "phon", "none"))
+match_matrix(
+  hypothesis,
+  reference,
+  unit = c("letter", "phon", "none"),
+  out = c("matrix", "edits")
+)
 }
 \arguments{
 \item{hypothesis}{Observed string of text}
@@ -12,6 +17,8 @@ match_matrix(hypothesis, reference, unit = c("letter", "phon", "none"))
 \item{reference}{True string of text}
 
 \item{unit}{How edit distance should be calculated, if at all}
+
+\item{out}{Whether to return the matrix (\code{"matrix"}) or a dataframe of edits (\code{"edit"})}
 }
 \value{
 Matrix
