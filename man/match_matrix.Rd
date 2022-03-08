@@ -7,7 +7,7 @@
 match_matrix(
   hypothesis,
   reference,
-  unit = c("letter", "phon", "none"),
+  unit = c("word", "letter", "phon", "none"),
   out = c("matrix", "edits")
 )
 }

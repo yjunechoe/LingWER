@@ -8,7 +8,7 @@
 #' @return Matrix
 #' @export
 #'
-match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none"), out = c("matrix", "edits")) {
+match_matrix <- function(hypothesis, reference, unit = c("word", "letter", "phon", "none"), out = c("matrix", "edits")) {
 
   # Setup ====
 
@@ -41,6 +41,10 @@ match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none
     r_max <- min(collapse::whichv(m[, min(collapse::fmax(c_set) + 1, n_cols)], 0), Inf)
     c(r_min, r_max)
   })
+  r_missing_as_edits <- vapply(missing_r_matches, function(x) {
+    any(vapply(r_bounds, function(b) { x > b[1] && x < b[2] }, logical(1)))
+  }, logical(1))
+  missing_r_matches <- missing_r_matches[r_missing_as_edits]
   r_missing_bins <- findInterval(missing_r_matches, c(0, vapply(r_bounds, max, double(1)), Inf))
   r_missing_sets <- split(missing_r_matches, r_missing_bins)
 
@@ -59,7 +63,8 @@ match_matrix <- function(hypothesis, reference, unit = c("letter", "phon", "none
     edit_grid <- switch(
       edit_unit,
       "none"   = outer(row_words, col_words, function(x, y) rep(Inf, length(x))),
-      "letter" = outer(row_words, col_words, stringdist::stringdist, method = "lv")
+      "letter" = outer(row_words, col_words, stringdist::stringdist, method = "lv"),
+      "word"   = ifelse(outer(seq_along(row_words), seq_along(col_words), `==`), 1L, Inf)
     )
 
     rownames(edit_grid) <- row_words
