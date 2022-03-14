@@ -7,6 +7,7 @@
 match_matrix(
   hypothesis,
   reference,
+  clean = TRUE,
   unit = c("word", "letter", "phon", "none"),
   out = c("matrix", "edits")
 )
@@ -15,6 +16,8 @@ match_matrix(
 \item{hypothesis}{Observed string of text}
 
 \item{reference}{True string of text}
+
+\item{clean}{Whether to apply \code{clean_text()} to the text inputs}
 
 \item{unit}{How edit distance should be calculated, if at all}
 

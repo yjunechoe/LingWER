@@ -2,22 +2,24 @@
 #'
 #' @param hypothesis Observed string of text
 #' @param reference True string of text
+#' @param clean Whether to apply `clean_text()` to the text inputs
 #' @param unit How edit distance should be calculated, if at all
 #' @param out Whether to return the matrix (`"matrix"`) or a dataframe of edits (`"edit"`)
 #'
 #' @return Matrix
 #' @export
 #'
-match_matrix <- function(hypothesis, reference, unit = c("word", "letter", "phon", "none"), out = c("matrix", "edits")) {
+match_matrix <- function(hypothesis, reference, clean = TRUE, unit = c("word", "letter", "phon", "none"), out = c("matrix", "edits")) {
 
   # Setup ====
 
-  if (!missing(reference)) {
-    reference <- clean_text(reference)
-  }
-
   m_rows <- reference
-  m_cols <- clean_text(hypothesis)
+  m_cols <- hypothesis
+
+  if (clean) {
+    m_rows <- clean_text(m_rows)
+    m_cols <- clean_text(m_cols)
+  }
 
   n_rows <- length(m_rows)
   n_cols <- length(m_cols)
@@ -81,11 +83,13 @@ match_matrix <- function(hypothesis, reference, unit = c("word", "letter", "phon
       m[r_ids[i], c_ids[i]] <<- dists[i]
     })
 
-    data.frame(
-      idx      = c_set[1],
-      truth    = paste(rownames(edit_grid), collapse = " "),
-      observed = paste(colnames(edit_grid), collapse = " ")
-    )
+    if (length(dists) != 0) {
+      data.frame(
+        idx      = c_set[1],
+        truth    = paste(rownames(edit_grid), collapse = " "),
+        observed = paste(colnames(edit_grid), collapse = " ")
+      )
+    }
 
   })
 
