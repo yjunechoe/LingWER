@@ -19,8 +19,11 @@ anchor <- function(m_rows, m_cols, debug = FALSE) {
     #   browser()
     # }
 
-    # Move on if next observed word is a duplicate (there's no duplicates in Stella Truth)
-    if (ci != length(m_cols) && ci_word == m_cols[ci + 1]) {
+    # Move on if next observed is a duplicate but next match isn't
+    if (
+      (ci != length(m_cols) && ci_word == m_cols[ci + 1]) &&
+      (ri != length(m_rows) && ri_word != m_rows[ri + 1])
+    ) {
       dist_matrix[, ci] <- Inf
       ci <- ci + 1
     }
