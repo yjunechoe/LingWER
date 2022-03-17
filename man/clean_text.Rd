@@ -4,10 +4,12 @@
 \alias{clean_text}
 \title{Clean up text}
 \usage{
-clean_text(string)
+clean_text(string, expand_contractions = TRUE)
 }
 \arguments{
 \item{string}{Length-1 character}
+
+\item{expand_contractions}{Whether to expand contractions. Defaults to \code{TRUE}}
 }
 \value{
 Character
