@@ -39,7 +39,7 @@ match_matrix <- function(hypothesis, reference, clean = TRUE, unit = c("word", "
 
   c_missing_sets <- split(missing_c_matches, cumsum(c(1, diff(missing_c_matches) != 1)))
   r_bounds <- lapply(c_missing_sets, function(c_set) {
-    r_min <- max(collapse::whichv(m[, max(collapse::fmin(c_set) - 1, 1)], 0), 1)
+    r_min <- max(collapse::whichv(m[, max(collapse::fmin(c_set) - 1, 1)], 0), 0)
     r_max <- min(collapse::whichv(m[, min(collapse::fmax(c_set) + 1, n_cols)], 0), Inf)
     c(r_min, r_max)
   })
