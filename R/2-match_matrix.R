@@ -85,7 +85,7 @@ match_matrix <- function(hypothesis, reference, clean = TRUE, unit = c("word", "
 
     if (length(dists) != 0) {
       data.frame(
-        idx      = c_set[1],
+        idx      = r_set[1],
         truth    = paste(rownames(edit_grid), collapse = " "),
         observed = paste(colnames(edit_grid), collapse = " ")
       )
